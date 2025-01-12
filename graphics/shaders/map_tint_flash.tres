@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bb1xgnoyfsxeu"]
+
+[ext_resource type="Shader" path="res://graphics/shaders/map_tint_flash.gdshader" id="1_t1k2j"]
+
+[resource]
+shader = ExtResource("1_t1k2j")
+shader_parameter/tone = Color(0, 0, 0, 0)
+shader_parameter/color = Color(0, 0, 0, 0)
