@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Godotmon Project"
+run/main_scene="res://Maps/test map.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://icon.svg"
 
@@ -19,9 +20,13 @@ config/icon="res://icon.svg"
 window/size/viewport_width=320
 window/size/viewport_height=180
 window/size/initial_position_type=3
+window/size/window_width_override=960
+window/size/window_height_override=540
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0.301961, 0.301961, 0.301961, 1)
