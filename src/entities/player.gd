@@ -1,16 +1,18 @@
 extends CharacterBody2D
 
-var walk_speed = 4.0   # Tiles per second
-var run_speed = walk_speed * 2   # Tiles per second
-const TILE_SIZE = 16
+# Default speed of this entity in tiles/second.
+var walk_speed: float = 4.0
+# Running speed of this entity, as a multiplier of its walk_speed.
+var RUN_SPEED_MULTIPLIER: float = 2.0
+const TILE_SIZE: int = 16
 
 @onready var anim_player = $AnimationPlayer
 @onready var anim_tree = $AnimationTree
-@onready var anim_state = anim_tree.get("parameters/playback")
+@onready var anim_state = anim_tree.get("parameters/StateMachine/playback")
 @onready var ray = $RayCast2D
 
 enum PlayerState { IDLE, TURNING, WALKING, RUNNING }
-enum FacingDirection { NONE, LEFT, RIGHT, UP, DOWN }
+enum FacingDirection { LEFT, RIGHT, UP, DOWN }
 
 var player_state = PlayerState.IDLE
 var facing_direction = FacingDirection.DOWN
@@ -28,6 +30,7 @@ func _ready() -> void:
 	anim_tree.active = true
 	set_state(PlayerState.IDLE)
 	initial_position = position
+	turn(direction_to_vector(facing_direction))
 
 #-------------------------------------------------------------------------------
 
@@ -73,9 +76,10 @@ func need_to_turn(new_direction: Vector2) -> bool:
 
 func turn(direction: Vector2) -> void:
 	facing_direction = vector_to_direction(direction)
-	anim_tree.set("parameters/Idle/blend_position", direction)
-	anim_tree.set("parameters/Walk/blend_position", direction)
-	anim_tree.set("parameters/Turn/blend_position", direction)
+	anim_tree.set("parameters/StateMachine/Idle/blend_position", direction)
+	anim_tree.set("parameters/StateMachine/Turn/blend_position", direction)
+	anim_tree.set("parameters/StateMachine/Walk/blend_position", direction)
+	anim_tree.set("parameters/StateMachine/Run/blend_position", direction)
 
 # Called by turning animations to return to the idle charset
 func finished_turning() -> void:
@@ -112,6 +116,7 @@ func update_move(delta: float) -> void:
 		position = initial_position + (move_direction * TILE_SIZE)
 		percent_moved_to_next_tile = 0.0
 		move_direction = Vector2.ZERO
+		set_speed_modifier(true)
 		is_moving = false
 	else:
 		position = initial_position + (move_direction * TILE_SIZE * percent_moved_to_next_tile)
@@ -119,24 +124,26 @@ func update_move(delta: float) -> void:
 func should_run() -> bool:
 	return Input.is_action_pressed("ui_shift")
 
-func set_speed_modifier() -> void:
+func set_speed_modifier(reset: bool = false) -> void:
 	move_speed_multiplier = 1.0
-	if should_run():
-		move_speed_multiplier = 2.0
-	# TODO: This doesn't change the animation speed. Apparently need to use a
-	#       AnimationNodeBlendTree as AnimationTree's tree root instead.
-	anim_player.set_speed_scale(move_speed_multiplier)
+	if !reset:
+		if should_run():
+			move_speed_multiplier = RUN_SPEED_MULTIPLIER
+			set_state(PlayerState.RUNNING)
+	anim_tree.set("parameters/TimeScale/scale", walk_speed * move_speed_multiplier)
 
 #-------------------------------------------------------------------------------
 
 func set_state(new_state: PlayerState) -> void:
 	player_state = new_state
-	if player_state == PlayerState.TURNING:
+	if player_state == PlayerState.IDLE:
+		anim_state.travel("Idle")
+	elif player_state == PlayerState.TURNING:
 		anim_state.travel("Turn")
 	elif player_state == PlayerState.WALKING:
 		anim_state.travel("Walk")
-	elif player_state == PlayerState.IDLE:
-		anim_state.travel("Idle")
+	elif player_state == PlayerState.RUNNING:
+		anim_state.travel("Run")
 
 func vector_to_direction(vector: Vector2) -> FacingDirection:
 	var direction
@@ -149,3 +156,15 @@ func vector_to_direction(vector: Vector2) -> FacingDirection:
 	elif vector.y > 0:
 		direction = FacingDirection.DOWN
 	return direction
+
+func direction_to_vector(direction: FacingDirection) -> Vector2:
+	var vector = Vector2.ZERO
+	if direction == FacingDirection.LEFT:
+		vector.x = -1
+	elif direction == FacingDirection.RIGHT:
+		vector.x = 1
+	elif direction == FacingDirection.UP:
+		vector.y = -1
+	elif direction == FacingDirection.DOWN:
+		vector.y = 1
+	return vector
