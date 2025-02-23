@@ -39,7 +39,6 @@ func remove_scene(scene_name : String, scene_type : SceneType) -> void:
 			var node_to_remove : Node2D = get_node(str(main.world_parent.get_path()) + "/" + scene_name)
 			if node_to_remove:
 				node_to_remove.queue_free()
-			GlobalVar.reserved_tiles.clear()
 		SceneType.ENTITY:
 			var node_to_remove : Node2D = get_node(str(main.world_parent.get_path()) + "/" + scene_name)
 			if node_to_remove:
