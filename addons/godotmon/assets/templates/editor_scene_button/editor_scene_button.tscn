@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmk0jwuwdqx40"]
+
+[ext_resource type="Script" path="res://addons/godotmon/src/editor_scene_button/editor_scene_button.gd" id="1_36exj"]
+
+[node name="EditorSceneButton" type="Button"]
+script = ExtResource("1_36exj")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

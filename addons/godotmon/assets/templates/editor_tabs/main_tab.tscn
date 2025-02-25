@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvfn8s61ls0du"]
+
+[ext_resource type="PackedScene" uid="uid://chkavb2612hjm" path="res://addons/godotmon/assets/templates/editor_tabs/editor_tab.tscn" id="1_r8m30"]
+[ext_resource type="PackedScene" uid="uid://cmk0jwuwdqx40" path="res://addons/godotmon/assets/templates/editor_scene_button/editor_scene_button.tscn" id="2_2onno"]
+[ext_resource type="Script" path="res://addons/godotmon/src/editor_tabs/update_checker_button.gd" id="3_bh1a1"]
+
+[node name="MainTab" instance=ExtResource("1_r8m30")]
+
+[node name="HFlowContainer" type="HFlowContainer" parent="PanelContainer/MarginContainer" index="0"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/h_separation = 64
+theme_override_constants/v_separation = 64
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HFlowContainer" index="0"]
+layout_mode = 2
+
+[node name="EditorSceneButton" parent="PanelContainer/MarginContainer/HFlowContainer/VBoxContainer" index="0" instance=ExtResource("2_2onno")]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HFlowContainer/VBoxContainer" index="1"]
+layout_mode = 2
+text = "Map Connections
+Editor"
+horizontal_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HFlowContainer" index="1"]
+layout_mode = 2
+
+[node name="UpdateCheckerButton" type="Button" parent="PanelContainer/MarginContainer/HFlowContainer/VBoxContainer2" index="0"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("3_bh1a1")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="PanelContainer/MarginContainer/HFlowContainer/VBoxContainer2/UpdateCheckerButton" index="0"]
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HFlowContainer/VBoxContainer2" index="1"]
+layout_mode = 2
+text = "Check for
+Updates"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/HFlowContainer/VBoxContainer2/UpdateCheckerButton" to="PanelContainer/MarginContainer/HFlowContainer/VBoxContainer2/UpdateCheckerButton" method="_on_pressed"]
