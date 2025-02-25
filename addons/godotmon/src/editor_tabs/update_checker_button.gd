@@ -66,11 +66,10 @@ func _dialog_setup() -> void:
 	
 	confirmation_dialog.size = DisplayServer.screen_get_size() / 2
 	confirmation_dialog.position = DisplayServer.screen_get_size() / 4
-	confirmation_dialog.show()
 
 
 func _on_changelog_http_request_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
-	changelog_label.text = body.get_string_from_ascii()
+	changelog_label.append_text(body.get_string_from_ascii())
 	changelog_gotten.emit()
 
 

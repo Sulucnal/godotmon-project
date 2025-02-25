@@ -47,8 +47,9 @@ script = ExtResource("3_bh1a1")
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="PanelContainer/MarginContainer/HFlowContainer/VBoxContainer2/UpdateCheckerButton" index="3"]
 unique_name_in_owner = true
 title = "Updater Window"
+initial_position = 1
 size = Vector2i(298, 146)
-visible = true
+exclusive = false
 always_on_top = true
 ok_button_text = "Yes"
 cancel_button_text = "No"
