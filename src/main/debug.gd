@@ -10,4 +10,14 @@ func _ready() -> void:
 	ScenesManager.add_scene("res://assets/templates/player.tscn", ScenesManager.SceneType.ENTITY, Vector2i(5, 5))
 	
 	await get_tree().create_timer(2).timeout
-	GDMUtils.show_message("1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20")
+	GDMUtils.show_message("Test of the [wave amp=20.0 freq=5.0 connected=1][rainbow freq=1.0 sat=0.8 val=0.8]Message Box[/rainbow][/wave] using [b][bgcolor=blue][color=red]BBCode[/color][/bgcolor][/b].")
+	await Observer.message_closed
+	GDMUtils.show_message("Yes, using BBCode makes it so that less characters are displayed, I haven't found a way to fix that yet but I'll be working on it.", "Sulucnal")
+	await Observer.message_closed
+	GDMUtils.show_message("test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test")
+	await Observer.message_closed
+	GDMUtils.show_message("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20")
+	await Observer.message_closed
+	GDMUtils.show_message("Test of a message with a talker name.", "Random person")
+	await Observer.message_closed
+	GDMUtils.show_message("Test of a message with a talker name and a portrait.", "Prof. Godot", "res://assets/graphics/ui/dialog/portraits/prof_godot.png")

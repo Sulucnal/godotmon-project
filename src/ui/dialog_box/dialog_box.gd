@@ -3,6 +3,7 @@ class_name DialogBox
 
 
 const LINES_IN_BOX : int = 3
+const MAX_CHARACTER_PER_CHUNK : int = 150
 
 
 @onready var portrait_texture: TextureRect = %PortraitTexture
@@ -29,39 +30,58 @@ func populate_box(message : String, talker_name : String, talker_image_path : St
 	_divide_message()
 
 
+#TODO: Find a way to make it handle BBCode properly.
 func _divide_message() -> void:
-	dialog_label.text = _message
-	var characters : int = _message.length()
-	show() #TEMPORARY
-	for character in characters:
-		await get_tree().process_frame
-		dialog_label.visible_characters += 1
-		print(dialog_label.get_visible_line_count())
-		if dialog_label.get_visible_line_count() > LINES_IN_BOX:
-			_message.right(dialog_label.visible_characters)
-			text_chunks.append(dialog_label.text.left(dialog_label.visible_characters))
-			dialog_label.visible_characters = 0
-			dialog_label.clear()
-			dialog_label.text = _message
-			print(_message)
+	#var raw_message : String = _strip_bbcode(_message)
+	#var raw_message_array : PackedStringArray = raw_message.split(" ")
+	var message_array : PackedStringArray = _message.split(" ")
+	var string_section : String = ""
+	for entry in message_array:
+		if (string_section + entry).length() > MAX_CHARACTER_PER_CHUNK:
+			text_chunks.append(string_section)
+			string_section = (entry + " ")
+		else:
+			string_section += (entry + " ")
 	
-	print(text_chunks)
+	text_chunks.append(string_section)
 
 
-func handle_message_display(instantaneous : bool) -> void:
-	#TEMPORARY
-	await get_tree().create_timer(20).timeout
-	_on_message_finished()
+func _strip_bbcode(source:String) -> String:
+	var regex = RegEx.new()
+	regex.compile("\\[.+?\\]")
+	return regex.sub(source, "", true)
+
+
+func handle_message_display() -> void:
+	arrow_panel.hide()
+	dialog_label.text = text_chunks[0]
+	while dialog_label.visible_ratio != 1:
+		dialog_label.visible_characters += 1
+		await get_tree().create_timer(GlobalVar.miliseconds_per_char).timeout
+
+
+func _process(_delta: float) -> void: #I don't like the way it's done but I'm too tired to solve it right now.
+	if dialog_label.visible_ratio == 1:
+		arrow_panel.show()
 
 
 func _input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_accept"):
 		return
 	
-	if dialog_label.visible_ratio == 1 and text_chunks.is_empty():
-		_on_message_finished()
+	if dialog_label.visible_ratio == 1:
+		text_chunks.remove_at(0)
+		
+		if text_chunks.is_empty():
+			_on_message_finished()
+		else:
+			dialog_label.visible_ratio = 0
+			handle_message_display()
+	else:
+		dialog_label.visible_ratio = 1
 
 
 func _on_message_finished() -> void:
 	ScenesManager.remove_scene(name, ScenesManager.SceneType.UI)
 	get_tree().paused = false
+	Observer.message_closed.emit()

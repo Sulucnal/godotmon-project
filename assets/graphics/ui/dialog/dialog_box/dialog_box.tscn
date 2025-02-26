@@ -65,6 +65,8 @@ theme_type_variation = &"DialogTextBoxLabel"
 bbcode_enabled = true
 scroll_active = false
 visible_characters = 0
+visible_characters_behavior = 2
+visible_ratio = 0.0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/DialogLabel"]
 layout_mode = 1
