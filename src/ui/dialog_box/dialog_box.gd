@@ -55,9 +55,11 @@ func _strip_bbcode(source:String) -> String:
 func handle_message_display() -> void:
 	arrow_panel.hide()
 	dialog_label.text = text_chunks[0]
+	if GlobalVar.milliseconds_per_char == 0:
+			dialog_label.visible_ratio = 1
 	while dialog_label.visible_ratio != 1:
 		dialog_label.visible_characters += 1
-		await get_tree().create_timer(GlobalVar.miliseconds_per_char).timeout
+		await get_tree().create_timer(GlobalVar.milliseconds_per_char).timeout
 
 
 func _process(_delta: float) -> void: #I don't like the way it's done but I'm too tired to solve it right now.
