@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rffaq44ec7ki"
-path="res://.godot/imported/default_name_box.png-43fe3929ca64d3a9bbfc0d9bf0691d6a.ctex"
+uid="uid://cysqbvwau42c0"
+path="res://.godot/imported/default_arrow.png-1cec16adc60d9e59bf7d6b0127c7d3b2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/graphics/ui/dialog/windowskin/default_name_box.png"
-dest_files=["res://.godot/imported/default_name_box.png-43fe3929ca64d3a9bbfc0d9bf0691d6a.ctex"]
+source_file="res://assets/ui/dialog/windowskin/default_arrow.png"
+dest_files=["res://.godot/imported/default_arrow.png-1cec16adc60d9e59bf7d6b0127c7d3b2.ctex"]
 
 [params]
 

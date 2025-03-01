@@ -1,9 +1,11 @@
-extends Control
-class_name DialogBox
+extends CanvasLayer
 
 
 const LINES_IN_BOX : int = 3
 const MAX_CHARACTER_PER_CHUNK : int = 150
+
+
+signal message_closed
 
 
 @onready var portrait_texture: TextureRect = %PortraitTexture
@@ -15,8 +17,11 @@ const MAX_CHARACTER_PER_CHUNK : int = 150
 var _message : String
 var text_chunks : PackedStringArray
 
-
-func populate_box(message : String, talker_name : String, talker_image_path : String) -> void:
+##@experimental
+##Shows a dialog box with the specified [param message]. Supports [url=https://docs.godotengine.org/en/stable/tutorials/ui/bbcode_in_richtextlabel.html]BBCode[/url].
+func show_message(message : String, talker_name : String = "", talker_image_path : String = "") -> void:
+	_reset_box()
+	
 	_message = message
 	
 	if talker_name != "":
@@ -27,10 +32,19 @@ func populate_box(message : String, talker_name : String, talker_image_path : St
 		portrait_texture.texture = load(talker_image_path)
 		portrait_texture.show()
 	
+	get_tree().paused = true
 	_divide_message()
+	show()
+	_handle_message_display()
 
 
-#TODO: Find a way to make it handle BBCode properly.
+func _reset_box() -> void:
+	name_label.hide()
+	portrait_texture.hide()
+	dialog_label.visible_ratio = 0
+
+
+#TODO: Find a way to make it handle BBCode properly. Probably by using RegEx.
 func _divide_message() -> void:
 	#var raw_message : String = _strip_bbcode(_message)
 	#var raw_message_array : PackedStringArray = raw_message.split(" ")
@@ -52,7 +66,7 @@ func _strip_bbcode(source:String) -> String:
 	return regex.sub(source, "", true)
 
 
-func handle_message_display() -> void:
+func _handle_message_display() -> void:
 	arrow_panel.hide()
 	dialog_label.text = text_chunks[0]
 	if GlobalVar.milliseconds_per_char == 0:
@@ -71,19 +85,19 @@ func _input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_accept"):
 		return
 	
-	if dialog_label.visible_ratio == 1:
+	if dialog_label.visible_ratio == 1 and not text_chunks.is_empty():
 		text_chunks.remove_at(0)
 		
 		if text_chunks.is_empty():
 			_on_message_finished()
 		else:
 			dialog_label.visible_ratio = 0
-			handle_message_display()
+			_handle_message_display()
 	else:
 		dialog_label.visible_ratio = 1
 
 
 func _on_message_finished() -> void:
-	ScenesManager.remove_scene(name, ScenesManager.SceneType.UI)
+	hide()
 	get_tree().paused = false
-	Observer.message_closed.emit()
+	message_closed.emit()
