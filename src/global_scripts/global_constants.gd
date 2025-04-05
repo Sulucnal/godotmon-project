@@ -44,11 +44,11 @@ enum AttackTarget {
 	## Every monster on the battlefield.
 	EVERYONE,
 	## Every monster on the opponent's side.
-	ENEMYBANK,
+	ENEMY_SIDE,
 	## Every monster on the user's side, except for the user itself.
-	ALLY_BANK_ASIDE_SELF,
+	ALLY_SIDE_ASIDE_SELF,
 	## Every monster on the user's side, including the user itself.
-	ALLY_BANK,
+	ALLY_SIDE,
 	## A random monster close to the user.
 	RANDOM_ADJACENT,
 	## A random monster that isn't the user.
