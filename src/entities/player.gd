@@ -57,7 +57,7 @@ func _physics_process(delta: float) -> void:
 func process_player_input(moved_last_update: bool = false) -> void:
 	# Detect directional input
 	var input_direction : Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down", INPUT_DEADZONE)
-	# Directional keys are pressed both for a horizontal and a vertical direction, resulting in the x and y component of the vector both being above zero.
+	# Handles cases where directional keys are pressed both for a horizontal and a vertical direction, resulting in the x and y component of the vector both being above zero.
 	if input_direction.x != 0 and input_direction.y !=0:
 		print(last_direction)
 		if not is_zero_approx(last_direction.x):
