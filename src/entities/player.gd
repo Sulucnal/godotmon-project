@@ -57,16 +57,8 @@ func _physics_process(delta: float) -> void:
 func process_player_input(moved_last_update: bool = false) -> void:
 	# Detect directional input
 	var input_direction : Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down", INPUT_DEADZONE)
-	# Handles cases where directional keys are pressed both for a horizontal and a vertical direction, resulting in the x and y component of the vector both being above zero.
-	if input_direction.x != 0 and input_direction.y !=0:
-		print(last_direction)
-		if not is_zero_approx(last_direction.x):
-			input_direction.x = 0
-		elif not is_zero_approx(last_direction.y) or last_direction == Vector2.ZERO:
-			input_direction.y = 0
-	else:
-		last_direction = input_direction.sign()
 	
+	input_direction = _get_appropriate_direction(input_direction)
 	
 	# If no directional input, idle
 	if input_direction.is_zero_approx():
@@ -83,6 +75,29 @@ func process_player_input(moved_last_update: bool = false) -> void:
 		move(input_direction)
 	else:
 		set_state(PlayerState.IDLE)
+
+
+func _get_appropriate_direction(input_direction : Vector2) -> Vector2:
+	match Constants.MOVEMENT_MODE:
+		Constants.MovementMode.GRID_4:
+			if input_direction.x != 0 and input_direction.y !=0:
+				if not is_zero_approx(last_direction.x):
+					input_direction.x = 0
+				elif not is_zero_approx(last_direction.y) or last_direction == Vector2.ZERO:
+					input_direction.y = 0
+			elif input_direction != Vector2.ZERO:
+				last_direction = input_direction.sign()
+				
+		Constants.MovementMode.GRID_8:
+			input_direction = input_direction.sign()
+			if input_direction != Vector2.ZERO:
+				last_direction = input_direction
+		
+		Constants.MovementMode.FREE:
+			if input_direction != Vector2.ZERO:
+				last_direction = input_direction
+	
+	return input_direction
 
 #-------------------------------------------------------------------------------
 
