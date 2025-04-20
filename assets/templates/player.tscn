@@ -1,8 +1,9 @@
-[gd_scene load_steps=46 format=3 uid="uid://dnam5q1ktsojt"]
+[gd_scene load_steps=47 format=3 uid="uid://dnam5q1ktsojt"]
 
 [ext_resource type="Script" uid="uid://bqugl373wh6hc" path="res://src/entities/player.gd" id="1_5y3l7"]
 [ext_resource type="Texture2D" uid="uid://c8o6gf6i762gj" path="res://assets/graphics/entities/player/Player Base.png" id="1_v4k6m"]
 [ext_resource type="Texture2D" uid="uid://fa43shloevct" path="res://assets/graphics/entities/player/Player Base running.png" id="3_6qhbq"]
+[ext_resource type="Script" uid="uid://d1bqhl3iw0itm" path="res://src/entities/player_controllers/grid_4_controller.gd" id="4_w6hia"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l57c3"]
 size = Vector2(16, 16)
@@ -582,3 +583,7 @@ position = Vector2(8, 8)
 [node name="RayCast2D" type="RayCast2D" parent="."]
 position = Vector2(8, 8)
 target_position = Vector2(0, 16)
+
+[node name="Grid4Controller" type="Node" parent="."]
+script = ExtResource("4_w6hia")
+metadata/_custom_type_script = "uid://d1bqhl3iw0itm"

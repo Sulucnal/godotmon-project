@@ -16,7 +16,7 @@ func _ready() -> void:
 	player.controller = self
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Detect directional input
 	input_direction = Input.get_vector("move_left", "move_right", "move_up", "move_down", player.INPUT_DEADZONE)
 	_get_direction()
