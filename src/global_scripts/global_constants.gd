@@ -21,6 +21,13 @@ enum MovementMode {
 const MOVEMENT_MODE : MovementMode = MovementMode.GRID_4
 ## Size of a tile in pixels. Assumes tiles are square.
 const TILE_SIZE : int = 16
+## The default speed of overworld entities in tiles per seconds.[br]
+## If the [constant MOVEMENT_MODE] is grid based, this value represents how many tiles are travelled in one seconds.[br]
+## If the [constant MOVEMENT_MODE] is free, it is instead the amount of pixels travelled each frames, multiplied by
+## the delta value of the [method Node._physics_process] function.
+const WALK_SPEED : int = 4
+## Running speed of this entity, as a multiplier of WALK_SPEED.
+const RUN_SPEED_MULTIPLIER : int = 2
 
 #endregion
 

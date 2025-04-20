@@ -1,53 +1,30 @@
-extends CharacterBody2D
+extends AnimatedEntity
 class_name Player
 
 
 ##The player scene and all of the logic behind it.
+##
+## @tutorial: TODO
 
 
-enum PlayerState { IDLE, TURNING, WALKING, RUNNING }
-enum FacingDirection { LEFT, RIGHT, UP, DOWN }
-
-
-## Default speed of this entity in tiles/second.
-const WALK_SPEED : float = 4.0
-## Running speed of this entity, as a multiplier of WALK_SPEED.
-const RUN_SPEED_MULTIPLIER : float = 2.0
 ## Deadzone used when determining the vector used for player movements.
-const INPUT_DEADZONE : float = 0.1
+const INPUT_DEADZONE : float = 0.5
 
-var player_state : PlayerState = PlayerState.IDLE
-var facing_direction : FacingDirection = FacingDirection.DOWN
-# Variables relating to the player moving
-var is_moving : bool = false
-var move_start_position : Vector2 = Vector2.ZERO
-var move_direction : Vector2 = Vector2.ZERO
-var move_speed_multiplier : float = 1.0
-var percent_moved_to_next_tile : float = 0.0
-var last_direction : Vector2 = Vector2(1,0)
+var player_state : AnimatedEntityState = AnimatedEntityState.IDLE
 
-@onready var anim_player : AnimationPlayer = $AnimationPlayer
-@onready var anim_tree : AnimationTree = $AnimationTree
-@onready var anim_state = anim_tree.get("parameters/StateMachine/playback")
+var controller : PlayerController
+
 @onready var ray : RayCast2D = $RayCast2D
 
 #-------------------------------------------------------------------------------
 
-func _ready() -> void:
-	anim_tree.active = true
-	set_state(PlayerState.IDLE)
-	move_start_position = position
-	turn(direction_to_vector(facing_direction))
-
-#-------------------------------------------------------------------------------
-
 func _physics_process(delta: float) -> void:
-	if player_state == PlayerState.TURNING:
+	if player_state == AnimatedEntityState.TURNING:
 		return
 	# Moving, so continue the move
 	var was_moving = false
 	if is_moving:
-		update_move(delta)
+		controller.update_move(delta)
 		was_moving = true
 	# Standing still or a step just ended, so check for input to move the player
 	if is_moving == false:
@@ -55,68 +32,40 @@ func _physics_process(delta: float) -> void:
 
 
 func process_player_input(moved_last_update: bool = false) -> void:
-	# Detect directional input
-	var input_direction : Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down", INPUT_DEADZONE)
-	
-	input_direction = _get_appropriate_direction(input_direction)
-	
 	# If no directional input, idle
-	if input_direction.is_zero_approx():
-		set_state(PlayerState.IDLE)
+	if controller.input_direction.is_zero_approx():
+		set_state(AnimatedEntityState.IDLE)
 		return
-	input_direction = input_direction.normalized()
+	controller.input_direction = controller.input_direction.normalized()
 	# Apply directional input
-	if !moved_last_update && need_to_turn(input_direction):
-		set_state(PlayerState.TURNING)
-		turn(input_direction)
-	elif can_move_in_direction(input_direction):
-		set_state(PlayerState.WALKING)
-		turn(input_direction)
-		move(input_direction)
+	if !moved_last_update && need_to_turn(controller.input_direction):
+		set_state(AnimatedEntityState.TURNING)
+		turn(controller.input_direction)
+	elif can_move_in_direction(controller.input_direction):
+		set_state(AnimatedEntityState.WALKING)
+		turn(controller.input_direction)
+		move(controller.input_direction)
 	else:
-		set_state(PlayerState.IDLE)
-
-
-func _get_appropriate_direction(input_direction : Vector2) -> Vector2:
-	match Constants.MOVEMENT_MODE:
-		Constants.MovementMode.GRID_4:
-			if input_direction.x != 0 and input_direction.y !=0:
-				if not is_zero_approx(last_direction.x):
-					input_direction.x = 0
-				elif not is_zero_approx(last_direction.y) or last_direction == Vector2.ZERO:
-					input_direction.y = 0
-			elif input_direction != Vector2.ZERO:
-				last_direction = input_direction.sign()
-				
-		Constants.MovementMode.GRID_8:
-			input_direction = input_direction.sign()
-			if input_direction != Vector2.ZERO:
-				last_direction = input_direction
-		
-		Constants.MovementMode.FREE:
-			if input_direction != Vector2.ZERO:
-				last_direction = input_direction
-	
-	return input_direction
+		set_state(AnimatedEntityState.IDLE)
 
 #-------------------------------------------------------------------------------
 
 func need_to_turn(new_direction: Vector2) -> bool:
-	var new_facing_direction = vector_to_direction(new_direction)
+	var new_facing_direction = VECTOR_TO_DIRECTION[new_direction.sign()]
 	return new_facing_direction != facing_direction
 
 
 func turn(direction: Vector2) -> void:
-	facing_direction = vector_to_direction(direction)
-	anim_tree.set("parameters/StateMachine/Idle/blend_position", direction)
-	anim_tree.set("parameters/StateMachine/Turn/blend_position", direction)
-	anim_tree.set("parameters/StateMachine/Walk/blend_position", direction)
-	anim_tree.set("parameters/StateMachine/Run/blend_position", direction)
+	facing_direction = VECTOR_TO_DIRECTION[direction.sign()]
+	animation_tree.set("parameters/StateMachine/Idle/blend_position", direction)
+	animation_tree.set("parameters/StateMachine/Turn/blend_position", direction)
+	animation_tree.set("parameters/StateMachine/Walk/blend_position", direction)
+	animation_tree.set("parameters/StateMachine/Run/blend_position", direction)
 
 
 # Called by turning animations to return to the idle charset
 func finished_turning() -> void:
-	set_state(PlayerState.IDLE)
+	set_state(AnimatedEntityState.IDLE)
 
 #-------------------------------------------------------------------------------
 
@@ -141,22 +90,6 @@ func move(direction: Vector2) -> void:
 	is_moving = true
 
 
-func update_move(delta: float) -> void:
-	if !is_moving:
-		return
-	# Move forward
-	percent_moved_to_next_tile += WALK_SPEED * move_speed_multiplier * delta
-	if percent_moved_to_next_tile >= 1.0:
-		# Finished moving
-		position = move_start_position + (move_direction * Constants.TILE_SIZE)
-		percent_moved_to_next_tile = 0.0
-		move_direction = Vector2.ZERO
-		set_speed_modifier(true)
-		is_moving = false
-	else:
-		position = move_start_position + (move_direction * Constants.TILE_SIZE * percent_moved_to_next_tile)
-
-
 func should_run() -> bool:
 	return Input.is_action_pressed("ui_shift")
 
@@ -165,47 +98,6 @@ func set_speed_modifier(reset: bool = false) -> void:
 	move_speed_multiplier = 1.0
 	if !reset:
 		if should_run():
-			move_speed_multiplier = RUN_SPEED_MULTIPLIER
-			set_state(PlayerState.RUNNING)
-	anim_tree.set("parameters/TimeScale/scale", WALK_SPEED * move_speed_multiplier)
-
-#-------------------------------------------------------------------------------
-
-func set_state(new_state: PlayerState) -> void:
-	player_state = new_state
-	match player_state:
-		PlayerState.IDLE:
-			anim_state.travel("Idle")
-		PlayerState.TURNING:
-			anim_state.travel("Turn")
-		PlayerState.WALKING:
-			anim_state.travel("Walk")
-		PlayerState.RUNNING:
-			anim_state.travel("Run")
-
-
-func vector_to_direction(vector: Vector2) -> FacingDirection:
-	var direction
-	if vector.x < 0:
-		direction = FacingDirection.LEFT
-	elif vector.x > 0:
-		direction = FacingDirection.RIGHT
-	elif vector.y < 0:
-		direction = FacingDirection.UP
-	elif vector.y > 0:
-		direction = FacingDirection.DOWN
-	return direction
-
-
-func direction_to_vector(direction: FacingDirection) -> Vector2:
-	var vector = Vector2.ZERO
-	match direction:
-		FacingDirection.LEFT:
-			vector.x = -1
-		FacingDirection.RIGHT:
-			vector.x = 1
-		FacingDirection.UP:
-			vector.y = -1
-		FacingDirection.DOWN:
-			vector.y = 1
-	return vector
+			move_speed_multiplier = Constants.RUN_SPEED_MULTIPLIER
+			set_state(AnimatedEntityState.RUNNING)
+	animation_tree.set("parameters/TimeScale/scale", Constants.WALK_SPEED * move_speed_multiplier)
