@@ -24,7 +24,7 @@ func update_move(delta: float) -> void:
 		player.position = player.move_start_position + (player.move_direction * Constants.TILE_SIZE)
 		player.percent_moved_to_next_tile = 0.0
 		player.move_direction = Vector2.ZERO
-		player.set_speed_modifier(true)
+		set_speed_modifier(true)
 		player.is_moving = false
 	else:
 		player.position = player.move_start_position + (player.move_direction * Constants.TILE_SIZE * player.percent_moved_to_next_tile)

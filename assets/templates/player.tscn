@@ -537,6 +537,7 @@ states/Walk/position = Vector2(396, 155)
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_euqtn"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_3cu2r"]
+graph_offset = Vector2(-177.792, 93.1647)
 nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_1daa7")
 nodes/StateMachine/position = Vector2(40, 120)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_euqtn")
@@ -574,7 +575,7 @@ anim_player = NodePath("../AnimationPlayer")
 parameters/StateMachine/Idle/blend_position = Vector2(0, 0)
 parameters/StateMachine/Run/blend_position = Vector2(0, 0)
 parameters/StateMachine/Turn/blend_position = Vector2(0, 0)
-parameters/StateMachine/Walk/blend_position = Vector2(0, 0)
+parameters/StateMachine/Walk/blend_position = Vector2(0.00121903, -0.000600576)
 parameters/TimeScale/scale = 1.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
