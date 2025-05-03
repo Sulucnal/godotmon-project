@@ -11,49 +11,48 @@ class_name AnimatedEntity
 ## @tutorial: TODO
 
 
-const VECTOR_TO_DIRECTION : Dictionary[Vector2, FacingDirection] = {
-	Vector2(-1,-1) : FacingDirection.UP_LEFT,
-	Vector2(-1,0) : FacingDirection.LEFT,
-	Vector2(-1,1) : FacingDirection.DOWN_LEFT,
-	Vector2(0,-1) : FacingDirection.UP,
-	Vector2(0,1) : FacingDirection.DOWN,
-	Vector2(1,-1) : FacingDirection.UP_RIGHT,
-	Vector2(1,0) : FacingDirection.RIGHT,
-	Vector2(1,1) : FacingDirection.DOWN_RIGHT
+const VECTOR_TO_DIRECTION: Dictionary[Vector2, FacingDirection] = {
+	Vector2(-1, -1): FacingDirection.UP_LEFT,
+	Vector2(-1, 0): FacingDirection.LEFT,
+	Vector2(-1, 1): FacingDirection.DOWN_LEFT,
+	Vector2(0, -1): FacingDirection.UP,
+	Vector2(0, 1): FacingDirection.DOWN,
+	Vector2(1, -1): FacingDirection.UP_RIGHT,
+	Vector2(1, 0): FacingDirection.RIGHT,
+	Vector2(1, 1): FacingDirection.DOWN_RIGHT
 }
 
 
-const DIRECTION_TO_VECTOR : Dictionary[FacingDirection, Vector2] = {
-	FacingDirection.UP_LEFT : Vector2(-1,-1),
-	FacingDirection.LEFT : Vector2(-1,0),
-	FacingDirection.DOWN_LEFT : Vector2(-1,1),
-	FacingDirection.UP : Vector2(0,-1),
-	FacingDirection.DOWN : Vector2(0,1),
-	FacingDirection.UP_RIGHT : Vector2(1,-1),
-	FacingDirection.RIGHT : Vector2(1,0),
-	FacingDirection.DOWN_RIGHT : Vector2(1,1)
+const DIRECTION_TO_VECTOR: Dictionary[FacingDirection, Vector2] = {
+	FacingDirection.UP_LEFT: Vector2(-1, -1),
+	FacingDirection.LEFT: Vector2(-1, 0),
+	FacingDirection.DOWN_LEFT: Vector2(-1, 1),
+	FacingDirection.UP: Vector2(0, -1),
+	FacingDirection.DOWN: Vector2(0, 1),
+	FacingDirection.UP_RIGHT: Vector2(1, -1),
+	FacingDirection.RIGHT: Vector2(1, 0),
+	FacingDirection.DOWN_RIGHT: Vector2(1, 1)
 }
 
 
-enum AnimatedEntityState { IDLE, TURNING, WALKING, RUNNING }
-enum FacingDirection { LEFT, RIGHT, UP, DOWN, UP_LEFT, DOWN_LEFT, UP_RIGHT, DOWN_RIGHT }
+enum AnimatedEntityState {IDLE, TURNING, WALKING, RUNNING}
+enum FacingDirection {LEFT, RIGHT, UP, DOWN, UP_LEFT, DOWN_LEFT, UP_RIGHT, DOWN_RIGHT}
 
 
-@export var animation_player : AnimationPlayer
-@export var animation_tree : AnimationTree
-@onready var animation_state : AnimationNodeStateMachinePlayback
+@export var animation_player: AnimationPlayer
+@export var animation_tree: AnimationTree
+@onready var animation_state: AnimationNodeStateMachinePlayback
 
 
-var animated_entity_state : AnimatedEntityState = AnimatedEntityState.IDLE
-var facing_direction : FacingDirection = FacingDirection.DOWN
-var last_direction : Vector2 = Vector2(1,0)
+var animated_entity_state: AnimatedEntityState = AnimatedEntityState.IDLE
+var facing_direction: FacingDirection = FacingDirection.DOWN
+var last_direction: Vector2 = Vector2(1, 0)
 
 
 func _ready() -> void:
 	_set_animation_state()
 	animation_tree.active = true
 	set_state(AnimatedEntityState.IDLE)
-	move_start_position = position
 	turn(DIRECTION_TO_VECTOR[facing_direction])
 
 
