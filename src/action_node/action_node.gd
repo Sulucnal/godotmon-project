@@ -110,7 +110,7 @@ func run_interaction(_body : CharacterBody2D) -> void:
 
 
 func _call_function(function_name : StringName, ignore_warning : bool = true, optional_parameter : Variant = null) -> void:
-	if not _is_method_valid(function_name, ignore_warning):
+	if not _is_method_valid(function_name, ignore_warning) or Engine.is_editor_hint():
 		return
 	
 	if optional_parameter == null:
