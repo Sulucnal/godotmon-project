@@ -11,9 +11,6 @@ class_name ActionRaycast2D
 ## @tutorial: TODO
 
 
-const DEFAULT_COLOR : Color = Color(1,1,1,0.5)
-
-
 ## The length of the raycast, in tiles.
 @export_range(1,999) var length : int = 1 :
 	set(value):
@@ -25,30 +22,17 @@ const DEFAULT_COLOR : Color = Color(1,1,1,0.5)
 
 func _ready() -> void:
 	target_position.y = Constants.TILE_SIZE * length # For cases where it is left at the default value.
-	_position_raycast()
+	position = Vector2(Constants.TILE_SIZE / 2, Constants.TILE_SIZE / 2)
 	
 
 
 func _process(delta: float) -> void:
 	force_raycast_update()
 	if is_colliding():
-		if not _is_method_valid("on_collide"):
+		if not _is_method_valid("on_collide") or Engine.is_editor_hint():
 			return
-		action_script.call("on_collide", get_collider())
-
-
-func _position_raycast() -> void:
-	position = Vector2(Constants.TILE_SIZE / 2, Constants.TILE_SIZE / 2)
-
-
-func _call_function(function_name : StringName, ignore_warning : bool = true, optional_parameter : Variant = null) -> void:
-	if not _is_method_valid(function_name) or Engine.is_editor_hint():
-		return
-	
-	if optional_parameter == null:
-		action_script.call(function_name)
-	else:
-		action_script.call(function_name, optional_parameter)
+		else:
+			action_script.call("on_collide", get_collider())
 
 
 func _is_method_valid(method_name : StringName) -> bool:
