@@ -22,11 +22,12 @@ class_name ActionRaycast2D
 
 func _ready() -> void:
 	target_position.y = Constants.TILE_SIZE * length # For cases where it is left at the default value.
+	@warning_ignore("integer_division")
 	position = Vector2(Constants.TILE_SIZE / 2, Constants.TILE_SIZE / 2)
 	
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	force_raycast_update()
 	if is_colliding():
 		if not _is_method_valid("on_collide") or Engine.is_editor_hint():
