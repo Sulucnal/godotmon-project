@@ -5,8 +5,8 @@ class_name Player
 ##The player scene and all of the logic behind it.
 
 
-enum PlayerState { IDLE, TURNING, WALKING, RUNNING }
-enum FacingDirection { LEFT, RIGHT, UP, DOWN }
+enum PlayerState {IDLE, TURNING, WALKING, RUNNING}
+enum FacingDirection {LEFT, RIGHT, UP, DOWN}
 
 
 ## Default speed of this entity in tiles/second.
@@ -27,6 +27,7 @@ var percent_moved_to_next_tile = 0.0
 @onready var anim_tree = $AnimationTree
 @onready var anim_state = anim_tree.get("parameters/StateMachine/playback")
 @onready var ray = $RayCast2D
+@onready var controller: PlayerControllerBase = $Controller
 
 #-------------------------------------------------------------------------------
 
@@ -52,16 +53,13 @@ func _physics_process(delta: float) -> void:
 
 
 func process_player_input(moved_last_update: bool = false) -> void:
-	# Detect directional input
-	var input_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	if input_direction.x != 0 and input_direction.y !=0:
-		input_direction.y = 0
+	var input_direction = controller.current_direction
 	
 	# If no directional input, idle
 	if input_direction.is_zero_approx():
 		set_state(PlayerState.IDLE)
 		return
-	input_direction = input_direction.normalized()
+
 	# Apply directional input
 	if !moved_last_update && need_to_turn(input_direction):
 		set_state(PlayerState.TURNING)
@@ -96,7 +94,7 @@ func finished_turning() -> void:
 
 func can_move_in_direction(direction: Vector2) -> bool:
 	# Debug "walk through anything" mode
-	if OS.is_debug_build() && Input.is_action_pressed("ui_control"):
+	if controller.ghost_movement_requested:
 		return true
 	# Collision checks
 	ray.target_position = direction * Constants.TILE_SIZE
@@ -131,14 +129,10 @@ func update_move(delta: float) -> void:
 		position = move_start_position + (move_direction * Constants.TILE_SIZE * percent_moved_to_next_tile)
 
 
-func should_run() -> bool:
-	return Input.is_action_pressed("ui_shift")
-
-
 func set_speed_modifier(reset: bool = false) -> void:
 	move_speed_multiplier = 1.0
 	if !reset:
-		if should_run():
+		if controller.running_requested:
 			move_speed_multiplier = RUN_SPEED_MULTIPLIER
 			set_state(PlayerState.RUNNING)
 	anim_tree.set("parameters/TimeScale/scale", WALK_SPEED * move_speed_multiplier)

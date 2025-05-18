@@ -18,3 +18,5 @@ mono_crash.*.json
 # More ignored files
 *.tmp
 ._*
+
+godotmon-project.app
