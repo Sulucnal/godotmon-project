@@ -126,7 +126,7 @@ func update_move(delta: float) -> void:
 		set_speed_modifier(true)
 		is_moving = false
 	else:
-		position = move_start_position + (move_direction * Constants.TILE_SIZE * percent_moved_to_next_tile)
+		position = move_start_position + (move_direction * floor(Constants.TILE_SIZE * percent_moved_to_next_tile))
 
 
 func set_speed_modifier(reset: bool = false) -> void:
