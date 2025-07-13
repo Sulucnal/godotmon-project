@@ -12,6 +12,20 @@ class_name Constants
 ## Size of a tile in pixels. Assumes tiles are square.
 const TILE_SIZE : int = 16
 
+## The type of map the player is in. Used in [MapMeta] to determine which kind of map panel a map is associated with.
+enum MapType {
+	GRASSY_OUTDOOR,
+	ROCKY_OUTDOOR,
+	SANDY_OUTDOOR,
+	SNOWY_OUTDOOR,
+	SEA,
+	SEA_SHORE,
+	CITY,
+	CAVERN,
+	FROZEN_CAVERN,
+	BUILDING
+}
+
 #endregion
 
 #region MONSTERS
