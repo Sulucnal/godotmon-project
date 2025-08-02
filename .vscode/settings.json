@@ -1,0 +1,10 @@
+{
+  "godotTools.editorPath.godot4": "/Applications/Godot.app",
+  "files.exclude": {
+    "**/*.uid": true
+  },
+  "[gdscript]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": false
+  }
+}
