@@ -7,6 +7,13 @@ class_name Constants
 ## resources for example). 
 
 
+#region ENTITIES
+## Default walking speed for most entities in tiles/second.
+const WALK_SPEED : float = 4.0
+## Default running speed for most entities, as a multiplier of WALK_SPEED.
+const RUN_SPEED_MULTIPLIER : float = 2.0
+#endregion
+
 #region OVERWORLD
 
 ## Size of a tile in pixels. Assumes tiles are square.

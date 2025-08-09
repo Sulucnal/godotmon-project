@@ -1,9 +1,6 @@
 extends EntityMoverComponent
 class_name PlayerMoverComponent
 
-## Running speed of this entity, as a multiplier of WALK_SPEED.
-const RUN_SPEED_MULTIPLIER = 2.0
-
 var _controller: PlayerControllerBase
 
 func _ready() -> void:
@@ -49,8 +46,8 @@ func _move_finished() -> void:
 
 func _set_speed_modifier(reset = false) -> void:
 	if _controller.running_requested && !reset:
-		_move_speed_multiplier = RUN_SPEED_MULTIPLIER
-		_animation_tree.set(&"parameters/TimeScale/scale", WALK_SPEED * _move_speed_multiplier)
+		_move_speed_multiplier = Constants.RUN_SPEED_MULTIPLIER
+		_animation_tree.set(&"parameters/TimeScale/scale", Constants.WALK_SPEED * _move_speed_multiplier)
 	else:
 		super ()
 

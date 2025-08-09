@@ -16,7 +16,6 @@ func add_scene(scene_path : String, scene_type : SceneType, coordinates : Vector
 	
 	match scene_type:
 		SceneType.WORLD:
-			print(main)
 			var scene : Node2D = load(scene_path).instantiate()
 			scene.global_position = final_position
 			main.world_parent.add_child(scene)

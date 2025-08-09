@@ -1,9 +1,6 @@
 extends Node2D
 class_name EntityMoverComponent
 
-## Default speed of this entity in tiles/second.
-const WALK_SPEED = 4.0
-
 signal turn_completed
 signal move_completed
 signal collided
@@ -102,14 +99,14 @@ func can_move_in_direction(direction: Vector2) -> bool:
 # TODO: fix this reset behavior (boolean params are massive red flag)
 func _set_speed_modifier(_reset = false) -> void:
 	_move_speed_multiplier = 1.0
-	_animation_tree.set(&"parameters/TimeScale/scale", WALK_SPEED * _move_speed_multiplier)
+	_animation_tree.set(&"parameters/TimeScale/scale", Constants.WALK_SPEED * _move_speed_multiplier)
 
 # TODO: use a tween to avoid having so much private variables
 #				Not doing it now because I don't know how to make it discreet
 func _physics_process(delta: float) -> void:
 	if (!is_moving()): return
 
-	_amount_moved_to_next_tile += WALK_SPEED * _move_speed_multiplier * delta
+	_amount_moved_to_next_tile += Constants.WALK_SPEED * _move_speed_multiplier * delta
 	if _amount_moved_to_next_tile >= tile_amount_per_move:
 		# Finished moving
 		_parent.position = _starting_position + (_moving_direction * floor(Constants.TILE_SIZE * tile_amount_per_move))

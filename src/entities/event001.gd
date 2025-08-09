@@ -1,14 +1,18 @@
 extends CharacterBody2D
 class_name Event001
 
-var _mover: EntityMoverComponent
+
+@export var _mover: EntityMoverComponent
+
+
+const TIMER_DELAY : float = 0.25
+
 
 func _ready() -> void:
-	_mover = $EntityMoverComponent
 	_move_init()
 
 func _next_step_after_time(step: Callable) -> void:
-	var timer: SceneTreeTimer = get_tree().create_timer(0.25)
+	var timer: SceneTreeTimer = get_tree().create_timer(TIMER_DELAY)
 	timer.timeout.connect(step, CONNECT_ONE_SHOT)
 
 func _move_init() -> void:

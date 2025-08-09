@@ -493,10 +493,11 @@ nodes/TimeScale/position = Vector2(260, 120)
 nodes/output/position = Vector2(420, 120)
 node_connections = [&"TimeScale", 0, &"StateMachine", &"output", 0, &"TimeScale"]
 
-[node name="event001" type="CharacterBody2D"]
+[node name="event001" type="CharacterBody2D" node_paths=PackedStringArray("_mover")]
 y_sort_enabled = true
 motion_mode = 1
 script = ExtResource("1_nyhoh")
+_mover = NodePath("EntityMoverComponent")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 y_sort_enabled = true
