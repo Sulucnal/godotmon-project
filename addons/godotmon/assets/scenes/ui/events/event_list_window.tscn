@@ -1,0 +1,134 @@
+[gd_scene load_steps=7 format=3 uid="uid://bo6awgy2euma"]
+
+[ext_resource type="Script" uid="uid://dybm534orw7pc" path="res://addons/godotmon/src/ui/events/event_nodes_list_window.gd" id="1_nlx1i"]
+[ext_resource type="Texture2D" uid="uid://bgm3ogsie6f44" path="res://addons/godotmon/assets/ui/EventNodesIcons/cogs-svgrepo-com.svg" id="2_ec2y7"]
+[ext_resource type="Texture2D" uid="uid://bj22gsx75ue4h" path="res://addons/godotmon/assets/ui/EventNodesIcons/dialog-svgrepo-com.svg" id="3_w0tk1"]
+[ext_resource type="Texture2D" uid="uid://b82xvmtxykpda" path="res://addons/godotmon/assets/ui/EventNodesIcons/map-pin-svgrepo-com.svg" id="4_lsrc2"]
+[ext_resource type="Texture2D" uid="uid://dlp7jtt7vaulm" path="res://addons/godotmon/assets/ui/EventNodesIcons/question-mark-svgrepo-com.svg" id="5_fedb2"]
+[ext_resource type="PackedScene" uid="uid://eengqo2v0v8h" path="res://addons/godotmon/assets/scenes/ui/events/event_button.tscn" id="6_ec2y7"]
+
+[node name="EventNodesListWindow" type="Window" node_paths=PackedStringArray("events_to_tab")]
+title = "Add Event Node..."
+initial_position = 4
+size = Vector2i(640, 360)
+always_on_top = true
+script = ExtResource("1_nlx1i")
+events_to_tab = {
+0: NodePath("VBoxContainer/TabsContainer/LogicContainer"),
+1: NodePath("VBoxContainer/TabsContainer/DialoguesContainer"),
+2: NodePath("VBoxContainer/TabsContainer/MovementsContainer"),
+3: NodePath("VBoxContainer/TabsContainer/OtherContainer")
+}
+
+[node name="Background" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="TabBar" type="TabBar" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+current_tab = 0
+tab_alignment = 1
+tab_count = 4
+tab_0/title = "Logic"
+tab_0/icon = ExtResource("2_ec2y7")
+tab_1/title = "Dialogues"
+tab_1/icon = ExtResource("3_w0tk1")
+tab_2/title = "Movements"
+tab_2/icon = ExtResource("4_lsrc2")
+tab_3/title = "Other"
+tab_3/icon = ExtResource("5_fedb2")
+
+[node name="TabsContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LogicContainer" type="MarginContainer" parent="VBoxContainer/TabsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabsContainer/LogicContainer"]
+layout_mode = 2
+
+[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer/TabsContainer/LogicContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DialoguesContainer" type="MarginContainer" parent="VBoxContainer/TabsContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabsContainer/DialoguesContainer"]
+layout_mode = 2
+
+[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer/TabsContainer/DialoguesContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EventButton" parent="VBoxContainer/TabsContainer/DialoguesContainer/ScrollContainer/HFlowContainer" instance=ExtResource("6_ec2y7")]
+layout_mode = 2
+text = "test button"
+_event_node_uid = "uid://cgtx8puiytk0a"
+
+[node name="MovementsContainer" type="MarginContainer" parent="VBoxContainer/TabsContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabsContainer/MovementsContainer"]
+layout_mode = 2
+
+[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer/TabsContainer/MovementsContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="OtherContainer" type="MarginContainer" parent="VBoxContainer/TabsContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabsContainer/OtherContainer"]
+layout_mode = 2
+
+[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer/TabsContainer/OtherContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AddCommentFrameButton" parent="VBoxContainer/TabsContainer/OtherContainer/ScrollContainer/HFlowContainer" instance=ExtResource("6_ec2y7")]
+layout_mode = 2
+text = "Add Comment Frame"
+autowrap_mode = 2
+_event_node_uid = "uid://cucnnxsjd32ea"
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="tab_changed" from="VBoxContainer/TabBar" to="." method="_on_tab_bar_tab_changed"]

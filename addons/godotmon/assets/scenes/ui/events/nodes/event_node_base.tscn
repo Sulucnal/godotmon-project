@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3 uid="uid://cpiyuqcpcy77i"]
+
+[ext_resource type="Script" uid="uid://f53e44tjkiu8" path="res://addons/godotmon/src/ui/events/nodes/event_node_base.gd" id="1_6k46x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r76ii"]
+bg_color = Color(0.0729167, 0.0729167, 0.0729167, 1)
+border_color = Color(1, 1, 1, 1)
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0ui4"]
+bg_color = Color(0.0729167, 0.0729167, 0.0729167, 1)
+border_width_left = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6k46x"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 4
+border_width_right = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gkqxy"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 5
+border_width_top = 1
+border_width_right = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+anti_aliasing = false
+
+[node name="EventNode" type="GraphNode"]
+z_index = 1
+offset_right = 9.0
+offset_bottom = 55.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_r76ii")
+theme_override_styles/panel_selected = SubResource("StyleBoxFlat_k0ui4")
+theme_override_styles/titlebar = SubResource("StyleBoxFlat_6k46x")
+theme_override_styles/titlebar_selected = SubResource("StyleBoxFlat_gkqxy")
+title = "test"
+script = ExtResource("1_6k46x")

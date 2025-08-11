@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjf1jamn3fva6"]
+
+[ext_resource type="Script" uid="uid://ctmwwtae18xpd" path="res://addons/godotmon/src/ui/events/edit_event_window.gd" id="1_oxmmr"]
+
+[node name="EditEventWindow" type="AcceptDialog"]
+title = "Event Window"
+initial_position = 4
+size = Vector2i(640, 360)
+visible = true
+transient = false
+always_on_top = true
+min_size = Vector2i(640, 360)
+script = ExtResource("1_oxmmr")
+
+[node name="GraphEdit" type="GraphEdit" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -49.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_offset = Vector2(-624, -303)
+
+[connection signal="gui_input" from="GraphEdit" to="." method="_on_graph_edit_gui_input"]
